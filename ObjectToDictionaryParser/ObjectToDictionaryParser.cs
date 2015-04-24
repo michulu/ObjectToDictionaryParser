@@ -16,18 +16,26 @@ namespace ObjectToDictionaryParser
         /// <param name="obj">any object you want to pass</param>
         /// <param name="dic">dictionary object to put all params</param>
         /// <param name="nullVal">show or not null values</param>
-        public static void parseObjectToDictionary(object obj, Dictionary<string,string> dic, bool nullVal){
-            parseObjectToDictionary(obj, dic, nullVal,"");
-        }
-        private static void parseObjectToDictionary(object obj, Dictionary<string,string> dic, bool nullVal, string str)
+        public static void parseObjectToDictionary(object obj, Dictionary<string, string> dic, bool nullVal)
         {
+            parseObjectToDictionary(obj, dic, nullVal, "");
+        }
+        private static void parseObjectToDictionary(object obj, Dictionary<string, string> dic, bool nullVal, string str)
+        {
+            if(obj == null)
+            {
+                if(nulVall)
+                {
+                    dic.Add(str.Remove(str.Length-1,1),"null");
+                }
+            }
             var props = obj.GetType().GetProperties();
             if (obj.GetType().IsArray)
             {
                 object[] array = (object[])obj;
                 for (int i = 0; i < array.Length; i++)
                 {
-                    string s = str + obj.GetType().Name.Remove(obj.GetType().Name.Length - 2, 2) + [ + i + ].;
+                    string s = str + obj.GetType().Name.Remove(obj.GetType().Name.Length - 2, 2) + "[" + i + "].";
                     parseObjectToDictionary(array.GetValue(i), dic,nullVal, s);
                 }
                 return;
@@ -39,7 +47,7 @@ namespace ObjectToDictionaryParser
                     object[] arr = (object[])p.GetValue(obj);
                     for (int i = 0; i < arr.Length; i++)
                     {
-                        string s = str + p.Name.Remove(p.Name.Length - 2, 2) + [ + i + ].;
+                        string s = str + p.Name + "[" + i + "].";
                         parseObjectToDictionary(arr.GetValue(i), dic,nullVal, s);
                     }
                     continue;
